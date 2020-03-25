@@ -8,7 +8,6 @@
 
 #import "LineChartScrollView.h"
 #import <HBBasicLib/HBBasicLib.h>
-#import <Masonry/Masonry.h>
 
 @implementation LineChartScrollView
 
