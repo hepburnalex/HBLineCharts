@@ -203,4 +203,8 @@
     [self.drawView.drawView cleanLineLayers];
 }
 
+- (void)fillLines:(NSInteger)startIndex startOffset:(CGFloat)startOffset endIndex:(NSInteger)endIndex startOffset:(CGFloat)endOffset fillColor:(UIColor *)fillColor {
+    [self.drawView.drawView fillLines:startIndex startOffset:startOffset endIndex:endIndex startOffset:endOffset fillColor:fillColor];
+}
+
 @end

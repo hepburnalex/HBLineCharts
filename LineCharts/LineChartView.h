@@ -41,4 +41,5 @@
 - (void)cleanLineLayers;
 - (void)registerMarkView:(NSString *)markname size:(CGSize)size;
 
+- (void)fillLines:(NSInteger)startIndex startOffset:(CGFloat)startOffset endIndex:(NSInteger)endIndex startOffset:(CGFloat)endOffset fillColor:(UIColor *)fillColor;
 @end

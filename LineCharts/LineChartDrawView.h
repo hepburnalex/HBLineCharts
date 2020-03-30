@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 绘制竖线
 - (void)addLineLayer:(NSInteger)index color:(UIColor *)color offset:(CGFloat)offset;
 
+- (void)fillLines:(NSInteger)startIndex startOffset:(CGFloat)startOffset endIndex:(NSInteger)endIndex startOffset:(CGFloat)endOffset fillColor:(UIColor *)fillColor;
+
 - (void)cleanLineLayers;
 
 @end

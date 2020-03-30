@@ -102,10 +102,7 @@
     [self addLineLayer:centerPoint :color];
 }
 
-- (void)addLineLayer:(NSInteger)index color:(UIColor *)color offset:(CGFloat)offset {
-    if (self.xSpace == 0) {
-        return;
-    }
+- (CGPoint)getPointByIndex:(NSInteger)index offset:(CGFloat)offset {
     CGFloat maxValue = self.maxYValue;
     CGFloat startValue = [self.targetValues[index-1] floatValue];
     CGFloat endValue = [self.targetValues[index] floatValue];
@@ -116,8 +113,15 @@
     CGFloat yoffset = (endValue-startValue)*offset/self.xSpace;
     CGFloat doubleValue = startValue+yoffset;
     CGFloat scale = (maxValue > 0)?doubleValue/maxValue:0;
-    NSLog(@"%s %f %f %f %f %f", __func__, startValue, doubleValue, endValue, offset, self.xSpace);
-    CGPoint centerPoint = CGPointMake(index*self.xSpace+offset, self.height*(1.0-scale));
+//    NSLog(@"%s %f %f %f %f %f", __func__, startValue, doubleValue, endValue, offset, self.xSpace);
+    return CGPointMake(index*self.xSpace+offset, self.height*(1.0-scale));
+}
+
+- (void)addLineLayer:(NSInteger)index color:(UIColor *)color offset:(CGFloat)offset {
+    if (self.xSpace == 0) {
+        return;
+    }
+    CGPoint centerPoint = [self getPointByIndex:index offset:offset];
     [self addLineLayer:centerPoint :color];
 }
 
@@ -138,6 +142,49 @@
     for (CAShapeLayer *layer in array) {
         [layer removeFromSuperlayer];
     }
+}
+
+- (void)fillLines:(NSInteger)startIndex startOffset:(CGFloat)startOffset endIndex:(NSInteger)endIndex startOffset:(CGFloat)endOffset fillColor:(UIColor *)fillColor {
+    if (self.xSpace == 0) {
+        return;
+    }
+    CGFloat maxValue = self.maxYValue;
+    CGPoint startPoint = [self getPointByIndex:startIndex offset:startOffset];
+    CGPoint endPoint = [self getPointByIndex:endIndex offset:endOffset];
+    
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    [path moveToPoint:CGPointMake(startPoint.x, self.height)];
+    [path addLineToPoint:startPoint];
+    
+    NSLog(@"fillLines:%d %f, %d %f", startIndex, startOffset, endIndex, endOffset);
+    if (startOffset > 0) {
+        startIndex ++;
+    }
+    if (endOffset < 0) {
+        endIndex --;
+    }
+    
+    for (int i=0; i<self.targetValues.count; i++) {
+        if (i < startIndex || i > endIndex) {
+            continue;
+        }
+        CGFloat scale = 0;
+        if (maxValue > 0) {
+            CGFloat doubleValue = [self.targetValues[i] floatValue];
+            scale = doubleValue/maxValue;
+        }
+        CGPoint point = CGPointMake(self.xSpace*i, self.height*(1.0-scale));
+        [path addLineToPoint:point];
+    }
+    [path addLineToPoint:endPoint];
+    [path addLineToPoint:CGPointMake(endPoint.x, self.height)];
+    [path addLineToPoint:CGPointMake(startPoint.x, self.height)];
+    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+    shapeLayer.path = path.CGPath;
+    shapeLayer.strokeColor = [UIColor clearColor].CGColor;
+    shapeLayer.fillColor = fillColor.CGColor;
+    shapeLayer.borderWidth = 0.5;
+    [self.contentView.layer addSublayer:shapeLayer];
 }
 
 /// 绘制折线
