@@ -17,6 +17,7 @@
 @property (nonatomic, strong) NSArray *targetValues;
 @property (nonatomic, readonly) CGFloat maxYValue;
 @property (nonatomic, strong) CAShapeLayer *lineLayer;
+@property (nonatomic, strong) CAShapeLayer *fillLayer;
 
 @end
 
@@ -145,6 +146,10 @@
 }
 
 - (void)fillLines:(NSInteger)startIndex startOffset:(CGFloat)startOffset endIndex:(NSInteger)endIndex startOffset:(CGFloat)endOffset fillColor:(UIColor *)fillColor {
+    if (self.fillLayer) {
+        [self.fillLayer removeFromSuperlayer];
+        self.fillLayer = nil;
+    }
     if (self.xSpace == 0) {
         return;
     }
@@ -185,6 +190,7 @@
     shapeLayer.fillColor = fillColor.CGColor;
     shapeLayer.borderWidth = 0.5;
     [self.contentView.layer addSublayer:shapeLayer];
+    self.fillLayer = shapeLayer;
 }
 
 /// 绘制折线
